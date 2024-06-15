@@ -38,11 +38,7 @@ THE SOFTWARE.
 #include <vector>
 #include <fstream>
 
-#if defined(__SHA__) && (defined(__x86_64__) || defined(_M_X64))
-#include <sha256-x86.h>
-#else
-#include <sha256.h>
-#endif
+#include <sha-intrinsics.h>
 
 namespace picosha2 {
 typedef uint32_t word_t;
@@ -59,11 +55,7 @@ const word_t initial_message_digest[8] = {0x6a09e667, 0xbb67ae85, 0x3c6ef372,
 
 template <typename RaIter1, typename RaIter2>
 void hash256_block(RaIter1 message_digest, RaIter2 first, RaIter2 last) {
-#if defined(__SHA__) && (defined(__x86_64__) || defined(_M_X64))
-    sha256_process_x86(message_digest, &(*first), std::distance(first, last));
-#else
-    sha256_process(message_digest, &(*first), std::distance(first, last));
-#endif
+    SHA256_PROCESS(message_digest, &(*first), std::distance(first, last));
 }
 
 }  // namespace detail
